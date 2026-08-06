@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE}
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    restart: always
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_INTERNAL_PORT}"
+
+    volumes:
+      - event_postgres_data:/var/lib/postgresql/data
+      - ./event-api/docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+  ngrok:
+    image: ${NGROK_IMAGE}
+    container_name: ${NGROK_CONTAINER_NAME}
+    restart: unless-stopped
+
+    command:
+      - "http"
+      - "${NGROK_TARGET}"
+
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+
+    ports:
+      - "${NGROK_PORT}:4040"
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: event-platform-mailpit
+
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+
+    restart: unless-stopped
+  
+
+
+volumes:
+  event_postgres_data:

@@ -1,0 +1,6 @@
+[submodule "event-manager-frontend"]
+	path = event-manager-frontend
+	url = git@github.com:EricReinprecht/event-manager-frontend.git
+[submodule "event-manager-microservice-api"]
+	path = event-manager-microservice-api
+	url = https://github.com/EricReinprecht/event-manager-microservice-api.git
